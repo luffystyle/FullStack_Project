@@ -1,0 +1,168 @@
+<!-- customer.component.html -->
+<div class="customer-container">
+  <!-- Header con botones principales -->
+  <div class="header">
+    <h1>Gestión de Clientes</h1>
+    <div class="button-group">
+      <button class="btn btn-primary" (click)="toggleMostrarClientes()">
+        {{ mostrarClientes ? 'Ocultar clientes' : 'Mostrar clientes' }}
+      </button>
+      <button class="btn btn-success" (click)="toggleFormulario()">
+        <span class="icon">+</span> Agregar Cliente
+      </button>
+    </div>
+  </div>
+
+  <!-- Formulario para agregar/editar cliente -->
+  <div class="form-container" *ngIf="mostrarFormulario">
+    <div class="form-card">
+      <h2>{{ modoEdicion ? 'Editar Cliente' : 'Nuevo Cliente' }}</h2>
+      <form class="customer-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Nombre *</label>
+            <input 
+              type="text" 
+              id="name" 
+              [(ngModel)]="nuevoCliente.name" 
+              name="name"
+              class="form-control"
+              placeholder="Ingrese el nombre"
+              required>
+          </div>
+          
+          <div class="form-group">
+            <label for="surname">Apellido *</label>
+            <input 
+              type="text" 
+              id="surname" 
+              [(ngModel)]="nuevoCliente.surname" 
+              name="surname"
+              class="form-control"
+              placeholder="Ingrese el apellido"
+              required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="code">Código *</label>
+            <input 
+              type="text" 
+              id="code" 
+              [(ngModel)]="nuevoCliente.code" 
+              name="code"
+              class="form-control"
+              placeholder="Ingrese el código"
+              required>
+          </div>
+          
+          <div class="form-group">
+            <label for="phone">Teléfono</label>
+            <input 
+              type="text" 
+              id="phone" 
+              [(ngModel)]="nuevoCliente.phone" 
+              name="phone"
+              class="form-control"
+              placeholder="Ingrese el teléfono">
+          </div>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="address">Dirección</label>
+          <input 
+            type="text" 
+            id="address" 
+            [(ngModel)]="nuevoCliente.address" 
+            name="address"
+            class="form-control"
+            placeholder="Ingrese la dirección">
+        </div>
+
+        <div class="form-group full-width">
+          <label for="iban">IBAN</label>
+          <input 
+            type="text" 
+            id="iban" 
+            [(ngModel)]="nuevoCliente.iban" 
+            name="iban"
+            class="form-control"
+            placeholder="Ingrese el IBAN">
+        </div>
+
+        <div class="form-actions">
+          <button 
+            type="button" 
+            class="btn btn-success"
+            (click)="modoEdicion ? actualizarCliente() : agregarCliente()">
+            {{ modoEdicion ? 'Actualizar Cliente' : 'Guardar Cliente' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tabla de clientes -->
+  <div class="table-container" *ngIf="mostrarClientes">
+    <div class="table-card">
+      <h2>Lista de Clientes ({{ customers.length }} registros)</h2>
+      
+      <div class="table-wrapper" *ngIf="customers.length > 0; else noClients">
+        <table class="customers-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Código</th>
+              <th>Teléfono</th>
+              <th>Dirección</th>
+              <th>IBAN</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let customer of customers; trackBy: trackByCustomerId">
+              <td>{{ customer.id }}</td>
+              <td>{{ customer.name }}</td>
+              <td>{{ customer.surname }}</td>
+              <td>{{ customer.code }}</td>
+              <td>{{ customer.phone || '-' }}</td>
+              <td>{{ customer.address || '-' }}</td>
+              <td class="iban-cell">{{ customer.iban || '-' }}</td>
+              <td>
+                <div class="action-buttons">
+                  <button 
+                    class="btn btn-warning btn-sm" 
+                    (click)="editarCliente(customer)"
+                    title="Editar cliente">
+                    <span class="icon">✏️</span>
+                  </button>
+                  <button 
+                    class="btn btn-danger btn-sm" 
+                    (click)="eliminarCliente(customer.id)"
+                    title="Eliminar cliente">
+                    <span class="icon">🗑️</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #noClients>
+        <div class="no-data">
+          <p>No hay clientes registrados</p>
+          <button class="btn btn-primary" (click)="toggleFormulario()">
+            Agregar primer cliente
+          </button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>
